@@ -1,0 +1,62 @@
+{% extends "layout.html" %} {% block body %} {{ super() }}
+<body>
+		<div class="container">
+			<!-- Modal -->
+			<div id="myModal" class="modal fade" role="dialog">
+				<div class="modal-dialog modal-lg">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Residents</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-bordered">
+								<thead>
+									<th>Name</th>
+									<th>Height</th>
+									<th>Mass</th>
+									<th>Skin color</th>
+									<th>Hair color</th>
+									<th>Eye color</th>
+									<th>Birth year</th>
+									<th>Gender</th>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" id="close" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- end Modal -->
+			<h1>STAR WARS UNIVERSE PLANETS</h1>
+			<div class="row">
+				<button class="btn btn-default disabled" disabled="disabled" id="pre">Previous</button>
+				<button class="btn btn-default" id="next">Next</button>
+			</div>
+			<br>
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Diameter</th>
+						<th>Climate</th>
+						<th>Terrain</th>
+						<th>Water</th>
+						<th>Population</th>
+						<th>Residents</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div id="divSpaceship">
+				<img src="/static/xwing.png" id="x-wing" alt="">
+			</div>
+		</div>
+	</body>
+{% endblock %}

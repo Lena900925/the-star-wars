@@ -1,47 +1,41 @@
 $(document).ready(function () {
-    // SPACESHIP ANIMATION
-    $("#divSpaceship").animate({ left: '-150%' }, 2000);
-    var audio = new Audio("/static/spaceship.mp3");
-    audio.play();
-
     var api = "http://swapi.co/api/planets/";
-    // INDEX TABLE FUNCTION
+
     function appendTableData(data) {
-        for (var idx in data) {
+        for (var one in data) {
             $(".table tbody").append("<tr></tr>");
             $(".table tbody tr:last").append("<td></td>");
-            $(".table tbody tr td:last").html(data[idx]['name']);
+            $(".table tbody tr td:last").html(data[one]['name']);
             $(".table tbody tr:last").append("<td></td>");
-            $(".table tbody tr td:last").html(data[idx]['diameter'] + " km");
+            $(".table tbody tr td:last").html(data[one]['diameter'] + " km");
             $(".table tbody tr:last").append("<td></td>");
-            $(".table tbody tr td:last").html(data[idx]['climate']);
+            $(".table tbody tr td:last").html(data[one]['climate']);
             $(".table tbody tr:last").append("<td></td>");
-            $(".table tbody tr td:last").html(data[idx]['terrain']);
+            $(".table tbody tr td:last").html(data[one]['terrain']);
             $(".table tbody tr:last").append("<td></td>");
-            if (data[idx]['surface_water'] === 'unknown') {
-                $(".table tbody tr td:last").html(data[idx]['surface_water'])
+            if (data[one]['surface_water'] === 'unknown') {
+                $(".table tbody tr td:last").html(data[one]['surface_water'])
             } else {
-                $(".table tbody tr td:last").html(data[idx]['surface_water'] + " %")
+                $(".table tbody tr td:last").html(data[one]['surface_water'] + " %")
             }
             $(".table tbody tr:last").append("<td></td>");
-            $(".table tbody tr td:last").html(data[idx]['population']);
+            $(".table tbody tr td:last").html(data[one]['population']);
             $(".table tbody tr:last").append("<td><button class='btn btn-default btn-sm' data-toggle='modal' data-target='#myModal'></button></td>");
-            if (data[idx]['residents'].length === 0) {
+            if (data[one]['residents'].length === 0) {
                 $(".table tbody tr td button:last").html("No known residents");
                 $(".table tbody tr td button:last").attr("disabled", "disabled");
             } else {
-                $(".table tbody tr td button:last").html(data[idx]['residents'].length + " residents");
-                $(".table tbody tr td button:last").attr("data-planet", data[idx]['url']);
+                $(".table tbody tr td button:last").html(data[one]['residents'].length + " residents");
+                $(".table tbody tr td button:last").attr("data-planet", data[one]['url']);
             }
         }
     }
-    //LIST PLANETS
+
     $.getJSON(api, function (response) {
         var planets = response['results'];
         appendTableData(planets);
     });
 
-    // MODAL TABLE
     $('#myModal').on('show.bs.modal', function (event) {
         var modal = $(this);
         var button = $(event.relatedTarget);
@@ -50,8 +44,8 @@ $(document).ready(function () {
             var planetName = response['name'];
             modal.find('.modal-title').text('Residents of ' + planetName);
             var residents = response['residents'];
-            for (idx in residents) {
-                var apiResident = residents[idx]; // api resident
+            for (one in residents) {
+                var apiResident = residents[one]; // api resident
                 $.getJSON(apiResident, function (response) {
                     modal.find('.table tbody').append("<tr></tr>");
                     modal.find('.table tbody tr:last').append("<td></td>");
@@ -59,7 +53,11 @@ $(document).ready(function () {
                     modal.find('.table tbody tr:last').append("<td></td>");
                     modal.find('.table tbody tr td:last').text(response['height'] + " cm");
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['mass'] + " kg");
+                    if (response['mass'] === 'unknown') {
+                        modal.find('.table tbody tr td:last').text(response['mass']);}
+                        else {
+                        modal.find('.table tbody tr td:last').text(response['mass'] + " kg");
+                    }
                     modal.find('.table tbody tr:last').append("<td></td>");
                     modal.find('.table tbody tr td:last').text(response['skin_color']);
                     modal.find('.table tbody tr:last').append("<td></td>");
@@ -78,10 +76,8 @@ $(document).ready(function () {
 
     $(".close, #close").click(function () {
         $("#myModal").find('.table tbody tr').remove()
-    })
+    });
 
-    //---BUTTONS---
-    //NEXT
     $("#next").click(function () {
         $.getJSON(api, function (response) {
             api = response['next'];
@@ -100,7 +96,6 @@ $(document).ready(function () {
             });
         });
     });
-    //PREVIOUS
     $("#pre").click(function () {
         $.getJSON(api, function (response) {
             api = response['previous'];
@@ -121,5 +116,4 @@ $(document).ready(function () {
             });
         });
     });
-    //---END---
 });

@@ -1,9 +1,6 @@
-import requests
-import json
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template
 
 app = Flask(__name__)
-#app.config.from_object(__name__)
 
 @app.route('/')
 def listing():

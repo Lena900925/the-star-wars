@@ -6,11 +6,13 @@ body, .modal-body {
 tbody {
     font-family: 'Raleway', sans-serif;
 }
- .modal-header, .modal-footer {
+
+.buttons {
+    margin-bottom: 5px;
+}
+
+.modal-header, .modal-footer {
     background-color: black;
     color: white;
     font-family: 'Anton', sans-serif;
  }
-.buttons {
-    margin-bottom: 5px;
-}

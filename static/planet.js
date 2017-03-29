@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    var api = "http://swapi.co/api/planets/";
+    var url = "http://swapi.co/api/planets/";
 
-    function appendTableData(data) {
+    function create_table(data) {
         for (var one in data) {
             $(".table tbody").append("<tr></tr>");
             $(".table tbody tr:last").append("<td></td>");
@@ -31,43 +31,43 @@ $(document).ready(function () {
         }
     }
 
-    $.getJSON(api, function (response) {
-        var planets = response['results'];
-        appendTableData(planets);
+    $.getJSON(url, function (data) {
+        var api_info = data['results'];
+        create_table(api_info);
     });
 
     $('#myModal').on('show.bs.modal', function (event) {
         var modal = $(this);
         var button = $(event.relatedTarget);
         var apiPlanet = button.data('planet');
-        $.getJSON(apiPlanet, function (response) {
-            var planetName = response['name'];
+        $.getJSON(apiPlanet, function (data) {
+            var planetName = data['name'];
             modal.find('.modal-title').text('Residents of ' + planetName);
-            var residents = response['residents'];
-            for (one in residents) {
-                var apiResident = residents[one]; // api resident
-                $.getJSON(apiResident, function (response) {
+            var residents = data['residents'];
+            for (var one in residents) {
+                var apiResident = residents[one];
+                $.getJSON(apiResident, function (data) {
                     modal.find('.table tbody').append("<tr></tr>");
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['name']);
+                    modal.find('.table tbody tr td:last').text(data['name']);
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['height'] + " cm");
+                    modal.find('.table tbody tr td:last').text(data['height'] + " cm");
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    if (response['mass'] === 'unknown') {
-                        modal.find('.table tbody tr td:last').text(response['mass']);}
+                    if (data['mass'] === 'unknown') {
+                        modal.find('.table tbody tr td:last').text(data['mass']);}
                         else {
-                        modal.find('.table tbody tr td:last').text(response['mass'] + " kg");
+                        modal.find('.table tbody tr td:last').text(data['mass'] + " kg");
                     }
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['skin_color']);
+                    modal.find('.table tbody tr td:last').text(data['skin_color']);
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['hair_color']);
+                    modal.find('.table tbody tr td:last').text(data['hair_color']);
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['eye_color']);
+                    modal.find('.table tbody tr td:last').text(data['eye_color']);
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['birth_year']);
+                    modal.find('.table tbody tr td:last').text(data['birth_year']);
                     modal.find('.table tbody tr:last').append("<td></td>");
-                    modal.find('.table tbody tr td:last').text(response['gender']);
+                    modal.find('.table tbody tr td:last').text(data['gender']);
                     modal.find('.table tbody tr').fadeIn(1500)
                 });
             }
@@ -79,36 +79,36 @@ $(document).ready(function () {
     });
 
     $("#next").click(function () {
-        $.getJSON(api, function (response) {
-            api = response['next'];
+        $.getJSON(url, function (data) {
+            url = data['next'];
             $(".table tbody tr").remove();
-            $.getJSON(api, function (response) {
-                var planets = response['results'];
-                appendTableData(planets);
+            $.getJSON(url, function (data) {
+                var planets = data['results'];
+                create_table(planets);
                 //enable previous
-                $("#pre").removeAttr("disabled");
-                $("#pre").removeClass("disabled");
+                $("#previous").removeAttr("disabled");
+                $("#previous").removeClass("disabled");
                 //disable next if no data
-                if (response['next'] === null) {
+                if (data['next'] === null) {
                     $("#next").addClass("disabled");
                     $("#next").attr("disabled", "disabled");
                 }
             });
         });
     });
-    $("#pre").click(function () {
-        $.getJSON(api, function (response) {
-            api = response['previous'];
+    $("#previous").click(function () {
+        $.getJSON(url, function (data) {
+            url = data['previous'];
             $(".table tbody tr").remove();
-            $.getJSON(api, function (response) {
-                var planets = response['results'];
-                appendTableData(planets);
-                //disable previous if no data
-                if (response['previous'] === null) {
+            $.getJSON(url, function (data) {
+                var planets = data['results'];
+                create_table(planets);
+
+                if (data['previous'] === null) {
                     $("#previous").addClass("disabled");
                     $("#previous").attr("disabled", "disabled");
                 };
-                //enable next
+
                 if ($("#next").attr("disabled") === "disabled") {
                     $("#next").removeAttr("disabled");
                     $("#next").removeClass("disabled");

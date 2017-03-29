@@ -1,4 +1,4 @@
-{% extends "layout.html" %} {% block body %} {{ super() }}
+{% extends "layout.html" %} {% block body %}
 <body>
 		<div class="container">
 			<!-- Modal -->
@@ -33,12 +33,11 @@
 				</div>
 			</div>
 			<!-- end Modal -->
-			<h1>STAR WARS UNIVERSE PLANETS</h1>
-			<div class="row">
-				<button class="btn btn-default disabled" disabled="disabled" id="pre">Previous</button>
-				<button class="btn btn-default" id="next">Next</button>
+			<h1>Star Wars universe planets</h1>
+            <div class="buttons">
+				<button class="btn btn-info disabled" disabled="disabled" id="previous">Previous</button>
+				<button class="btn btn-info" id="next">Next page</button>
 			</div>
-			<br>
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -54,9 +53,6 @@
 				<tbody>
 				</tbody>
 			</table>
-			<div id="divSpaceship">
-				<img src="/static/xwing.png" id="x-wing" alt="">
-			</div>
 		</div>
 	</body>
 {% endblock %}

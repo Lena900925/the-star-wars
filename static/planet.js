@@ -1,52 +1,56 @@
 $(document).ready(function () {
-    var url = "http://swapi.co/api/planets/";
+    // SPACESHIP ANIMATION
+    $("#divSpaceship").animate({ left: '-150%' }, 2000);
+    var audio = new Audio("/static/spaceship.mp3");
+    audio.play();
 
-
-    /*CREATE TABLE*/
-    function create_table(data) {
-        for (one_planet in data) {
-            console.log("ASD");
-            /*10-szer*/
+    var api = "http://swapi.co/api/planets/";
+    // INDEX TABLE FUNCTION
+    function appendTableData(data) {
+        for (var idx in data) {
             $(".table tbody").append("<tr></tr>");
-            $(".table tr").append("<td>" + data[one_planet]['name'] + "</td>");
-
-            $(".table tr").append("<td>" + data[one_planet]['diameter'] + " km" + "</td>");
-            $(".table tr").append("<td>" + data[one_planet]['climate'] + "</td>");
-            $(".table tbody tr").append("<td>" + data[one_planet]['terrain'] + "</td>");
-            if (data[one_planet]['surface_water'] === 'unknown') {
-                $(".table tbody  tr").append("<td>" + data[one_planet]['surface_water'] + "</td>");
+            $(".table tbody tr:last").append("<td></td>");
+            $(".table tbody tr td:last").html(data[idx]['name']);
+            $(".table tbody tr:last").append("<td></td>");
+            $(".table tbody tr td:last").html(data[idx]['diameter'] + " km");
+            $(".table tbody tr:last").append("<td></td>");
+            $(".table tbody tr td:last").html(data[idx]['climate']);
+            $(".table tbody tr:last").append("<td></td>");
+            $(".table tbody tr td:last").html(data[idx]['terrain']);
+            $(".table tbody tr:last").append("<td></td>");
+            if (data[idx]['surface_water'] === 'unknown') {
+                $(".table tbody tr td:last").html(data[idx]['surface_water'])
+            } else {
+                $(".table tbody tr td:last").html(data[idx]['surface_water'] + " %")
             }
-            else {
-                $(".table tbody tr").append("<td>" + data[one_planet]['surface_water'] + " %" + "</td>");
-            }
-            $(".table tbody tr").append("<td>" + data[one_planet]['population'] + "</td>");
-            $(".table tbody tr").append("<td><button class='btn btn-default btn-sm' data-toggle='modal' data-target='#myModal'></button></td>");
-            if (data[one_planet]['residents'].length === 0) {
+            $(".table tbody tr:last").append("<td></td>");
+            $(".table tbody tr td:last").html(data[idx]['population']);
+            $(".table tbody tr:last").append("<td><button class='btn btn-default btn-sm' data-toggle='modal' data-target='#myModal'></button></td>");
+            if (data[idx]['residents'].length === 0) {
                 $(".table tbody tr td button:last").html("No known residents");
                 $(".table tbody tr td button:last").attr("disabled", "disabled");
             } else {
-                $(".table tbody tr td button:last").html(data[one_planet]['residents'].length + " residents");
-                $(".table tbody tr td button:last").attr("data-planet", data[one_planet]['url']);
+                $(".table tbody tr td button:last").html(data[idx]['residents'].length + " residents");
+                $(".table tbody tr td button:last").attr("data-planet", data[idx]['url']);
             }
         }
     }
-
-    $.getJSON(url, function (values) {
-        var each = values['results'];
-        create_table(each);
+    //LIST PLANETS
+    $.getJSON(api, function (response) {
+        var planets = response['results'];
+        appendTableData(planets);
     });
 
-    // MODAL
+    // MODAL TABLE
     $('#myModal').on('show.bs.modal', function (event) {
         var modal = $(this);
         var button = $(event.relatedTarget);
-        var apiPlanet = button.data('planet'); // api planet
-
+        var apiPlanet = button.data('planet');
         $.getJSON(apiPlanet, function (response) {
             var planetName = response['name'];
             modal.find('.modal-title').text('Residents of ' + planetName);
             var residents = response['residents'];
-            for (var idx in residents) {
+            for (idx in residents) {
                 var apiResident = residents[idx]; // api resident
                 $.getJSON(apiResident, function (response) {
                     modal.find('.table tbody').append("<tr></tr>");
@@ -66,7 +70,7 @@ $(document).ready(function () {
                     modal.find('.table tbody tr td:last').text(response['birth_year']);
                     modal.find('.table tbody tr:last').append("<td></td>");
                     modal.find('.table tbody tr td:last').text(response['gender']);
-                    modal.find('.table tbody tr').fadeIn(1500);
+                    modal.find('.table tbody tr').fadeIn(1500)
                 });
             }
         });
@@ -76,4 +80,46 @@ $(document).ready(function () {
         $("#myModal").find('.table tbody tr').remove()
     })
 
+    //---BUTTONS---
+    //NEXT
+    $("#next").click(function () {
+        $.getJSON(api, function (response) {
+            api = response['next'];
+            $(".table tbody tr").remove();
+            $.getJSON(api, function (response) {
+                var planets = response['results'];
+                appendTableData(planets);
+                //enable previous
+                $("#pre").removeAttr("disabled");
+                $("#pre").removeClass("disabled");
+                //disable next if no data
+                if (response['next'] === null) {
+                    $("#next").addClass("disabled");
+                    $("#next").attr("disabled", "disabled");
+                }
+            });
+        });
+    });
+    //PREVIOUS
+    $("#pre").click(function () {
+        $.getJSON(api, function (response) {
+            api = response['previous'];
+            $(".table tbody tr").remove();
+            $.getJSON(api, function (response) {
+                var planets = response['results'];
+                appendTableData(planets);
+                //disable previous if no data
+                if (response['previous'] === null) {
+                    $("#previous").addClass("disabled");
+                    $("#previous").attr("disabled", "disabled");
+                };
+                //enable next
+                if ($("#next").attr("disabled") === "disabled") {
+                    $("#next").removeAttr("disabled");
+                    $("#next").removeClass("disabled");
+                }
+            });
+        });
+    });
+    //---END---
 });

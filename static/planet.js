@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var url = "http://swapi.co/api/planets/";
+    var url = "https://swapi.co/api/planets/";
 
     function create_table(data) {
         for (var one in data) {

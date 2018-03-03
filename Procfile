@@ -1,1 +1,1 @@
-web: gunicorn the-star-wars.wsgi --log-file -
+web: python main.py runserver 127.0.0.1:5000 --log-file -

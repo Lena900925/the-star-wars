@@ -1,1 +1,1 @@
-web gunicorn lena-star-wars.wsgi --log-file -
+web: gunicorn sw:app --log-file -
